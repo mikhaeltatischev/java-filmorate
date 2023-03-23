@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Slf4j
 public class Film {
 
-    private static final LocalDate EARLIEST_DATE_RELEASE = LocalDate.of(1895, 12, 28);
     private static final int LENGTH_DESCRIPTION = 200;
 
     private int id;
