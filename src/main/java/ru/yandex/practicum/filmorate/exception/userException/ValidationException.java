@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.userException;
 
-public class ValidationException extends Exception{
+public class ValidationException extends RuntimeException {
 
     @Override
     public String getMessage() {

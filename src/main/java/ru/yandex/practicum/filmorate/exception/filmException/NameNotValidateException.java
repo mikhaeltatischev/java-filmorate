@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.filmException;
 
-public class NameNotValidateException extends Exception {
+public class NameNotValidateException extends RuntimeException {
 
     private String message;
 

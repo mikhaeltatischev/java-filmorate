@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.userException;
 
-public class LoginNotValidateException extends Exception {
+public class LoginNotValidateException extends RuntimeException {
 
     private String message;
 

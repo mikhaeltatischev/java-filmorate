@@ -7,31 +7,33 @@ import ru.yandex.practicum.filmorate.exception.controllerException.UserNotFoundE
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
 public class UserController {
 
-    private Set<User> users = new HashSet<>();
+    private static int id = 1;
+    private Map<Integer, User> users = new HashMap<>();
 
     @GetMapping("/users")
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         log.info("Текущее количество пользователей: {}", users.size());
 
-        return users;
+        return getUsers(users);
     }
 
     @PutMapping(value = "/users")
     public User update(@Valid @RequestBody User user) throws UserNotFoundException {
-        for (User currentUser : users) {
-            if (currentUser.equals(user)) {
-                currentUser.updateUser(user);
-                log.info("Информация о обновленном пользователе: {}", currentUser);
+        if (users.containsKey(user.getId())) {
+            user.updateUser(user);
+            users.put(user.getId(), user);
+            log.info("Информация о обновленном пользователе: {}", user);
 
-                return currentUser;
-            }
+            return user;
         }
 
         throw new UserNotFoundException();
@@ -39,23 +41,29 @@ public class UserController {
 
     @PostMapping(value = "/users")
     public User create(@Valid @RequestBody User user) {
-        try {
-            if (users.contains(user)) {
-                throw new UserAlreadyExistException();
-            } else {
-                if (user.getName() == null) {
-                    user.setName(user.getLogin());
-                }
-
-                User.increaseId();
-                users.add(user);
-                log.info("Информация о добавленном пользователе: {}", user);
+        if (users.containsKey(user.getId())) {
+            throw new UserAlreadyExistException();
+        } else {
+            if (user.getName() == null) {
+                user.setName(user.getLogin());
             }
-        } catch (UserAlreadyExistException e) {
-            System.out.println(e.getMessage());
+
+            user.setId(id);
+            id++;
+            users.put(user.getId(), user);
+            log.info("Информация о добавленном пользователе: {}", user);
         }
 
-
         return user;
+    }
+
+    private List<User> getUsers(Map<Integer, User> usersMap) {
+        List<User> users = new ArrayList<>();
+
+        for (User user : usersMap.values()) {
+            users.add(user);
+        }
+
+        return users;
     }
 }

@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.userException;
 
-public class EmailNotValidateException extends Exception {
+public class EmailNotValidateException extends RuntimeException {
 
     private String message;
 
