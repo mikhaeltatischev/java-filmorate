@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.filmException;
 
-public class DescriptionNotValidateException extends Exception {
+public class DescriptionNotValidateException extends RuntimeException {
 
     private String message;
 

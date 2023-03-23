@@ -39,9 +39,7 @@ public class FilmTest {
         Film film = new Film();
         film.setId(1);
         film.setName("name");
-        film.setDescription("ааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа" +
-                "ааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа" +
-                "ааааааааааааааааааааааа");
+        film.setDescription("a".repeat(201));
         film.setDuration(100L);
         film.setReleaseDate(LocalDate.of(2000, 02, 02));
 

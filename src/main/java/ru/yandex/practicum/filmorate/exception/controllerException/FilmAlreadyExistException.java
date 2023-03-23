@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.controllerException;
 
-public class FilmAlreadyExistException extends Exception {
+public class FilmAlreadyExistException extends RuntimeException {
 
     private String message;
 

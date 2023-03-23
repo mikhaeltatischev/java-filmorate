@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.filmException;
 
-public class ReleaseDateNotValidateException extends Exception {
+public class ReleaseDateNotValidateException extends RuntimeException {
 
     private String message;
 

@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.controllerException;
 
-public class FilmNotFoundException extends Exception {
+public class FilmNotFoundException extends RuntimeException {
 
     @Override
     public String getMessage() {

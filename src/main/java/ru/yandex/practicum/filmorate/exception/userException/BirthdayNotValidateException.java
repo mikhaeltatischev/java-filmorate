@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.userException;
 
-public class BirthdayNotValidateException extends Exception {
+public class BirthdayNotValidateException extends RuntimeException {
 
     private String message;
 

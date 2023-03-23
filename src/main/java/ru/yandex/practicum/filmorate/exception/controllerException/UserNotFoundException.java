@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.exception.controllerException;
 
-public class UserNotFoundException extends Exception {
+public class UserNotFoundException extends RuntimeException {
 
     @Override
     public String getMessage() {
