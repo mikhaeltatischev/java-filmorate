@@ -193,6 +193,6 @@ public class FilmControllerTest {
                         .content(filmJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isNotFound());
     }
 }
