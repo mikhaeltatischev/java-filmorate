@@ -1,13 +1,16 @@
 package ru.yandex.practicum.filmorate.exception.controllerException;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
 public class FilmAlreadyExistException extends RuntimeException {
 
     private String message;
 
-    public FilmAlreadyExistException() {
-        message = "Фильм уже существует";
+    public FilmAlreadyExistException(String message) {
+        this.message = message;
     }
 
+    @Override
     public String getMessage() {
         return message;
     }

@@ -27,23 +27,20 @@ public class UserController {
     }
 
     @PutMapping(value = "/users")
-    public User update(@Valid @RequestBody User user) throws UserNotFoundException {
-        if (users.containsKey(user.getId())) {
+    public User update(@Valid @RequestBody User user) {
+        if (findUser(user) != null) {
             user.updateUser(user);
             users.put(user.getId(), user);
             log.info("Информация о обновленном пользователе: {}", user);
 
             return user;
         }
-
-        throw new UserNotFoundException();
+        throw new UserNotFoundException("User with id " + user.getId() + " not found");
     }
 
     @PostMapping(value = "/users")
     public User create(@Valid @RequestBody User user) {
-        if (users.containsKey(user.getId())) {
-            throw new UserAlreadyExistException();
-        } else {
+        if (findUser(user) == null) {
             if (user.getName() == null) {
                 user.setName(user.getLogin());
             }
@@ -52,9 +49,10 @@ public class UserController {
             id++;
             users.put(user.getId(), user);
             log.info("Информация о добавленном пользователе: {}", user);
-        }
 
-        return user;
+            return user;
+        }
+        throw new UserAlreadyExistException("User with id " + user.getId() + " already exist");
     }
 
     private List<User> getUsers(Map<Integer, User> usersMap) {
@@ -65,5 +63,9 @@ public class UserController {
         }
 
         return users;
+    }
+
+    private User findUser(User user) {
+        return users.get(user.getId());
     }
 }

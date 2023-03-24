@@ -28,29 +28,27 @@ public class FilmController {
 
     @PutMapping(value = "/films")
     public Film update(@Valid @RequestBody Film film) {
-        if (films.containsKey(film.getId())) {
+        if (findFilm(film) != null) {
             film.updateFilm(film);
             films.put(film.getId(), film);
             log.info("Информация о обновленном фильме: {}", film);
 
             return film;
         }
-
-        throw new FilmNotFoundException();
+        throw new FilmNotFoundException("Film with id: " + film.getId() + " not found");
     }
 
     @PostMapping(value = "/films")
     public Film create(@Valid @RequestBody Film film) {
-        if (films.containsKey(film.getId())) {
-            throw new FilmAlreadyExistException();
-        } else {
+        if (findFilm(film) == null) {
             film.setId(id);
             id++;
             films.put(film.getId(), film);
             log.info("Информация о добавленном фильме: {}", film);
-        }
 
-        return film;
+            return film;
+        }
+        throw new FilmAlreadyExistException("Film with id: " + film.getId() + " already exist");
     }
 
     private List<Film> getFilms(Map<Integer, Film> filmsMap) {
@@ -61,5 +59,9 @@ public class FilmController {
         }
 
         return films;
+    }
+
+    private Film findFilm(Film film) {
+        return films.get(film.getId());
     }
 }
