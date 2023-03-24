@@ -28,8 +28,7 @@ public class UserControllerTest {
     public void getUsers() throws Exception {
         this.mockMvc.perform(get("/users"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("")));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -48,6 +47,17 @@ public class UserControllerTest {
 
         this.mockMvc.perform(put("/users")
                         .content(updateUserJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createUserWithoutName() throws Exception {
+        String userJson = "{\"login\": \"login\",\"email\": \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        this.mockMvc.perform(post("/users")
+                        .content(userJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -153,5 +163,17 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateNotExistUser() throws Exception {
+        String updateUserJson = "{\"login\": \"notExist\",\"name\": \"name\",\"id\": 4000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        this.mockMvc.perform(put("/users")
+                        .content(updateUserJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }
