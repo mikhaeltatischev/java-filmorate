@@ -8,10 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 
-import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -46,8 +44,8 @@ public class FilmControllerTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(put("/films")
-                    .content(updateFilmJson)
-                    .contentType(MediaType.APPLICATION_JSON))
+                        .content(updateFilmJson)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
