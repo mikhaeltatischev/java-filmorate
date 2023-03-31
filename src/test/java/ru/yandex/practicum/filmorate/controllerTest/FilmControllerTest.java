@@ -187,12 +187,21 @@ public class FilmControllerTest {
     @Test
     public void updateNotExistFilm() throws Exception {
         String filmJson = "{\"name\": \"not exist\",\"description\": \"description\", \"releaseDate\":" +
-                " \"1967-03-25\",\"duration\": 100, \"id\": 4000}";
+                " \"1967-03-25\",\"duration\": 100, \"id\": 10000}";
 
         mockMvc.perform(put("/films")
                         .content(filmJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getUserById() throws Exception {
+        String filmJson = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+                " \"1967-03-25\",\"duration\": 100, \"id\": 5000}";
+
+        String updateFilmJson = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+                " \"2000-03-25\",\"duration\": 100, \"id\": 6000}";
     }
 }

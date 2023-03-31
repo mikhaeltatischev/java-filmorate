@@ -2,39 +2,69 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.yandex.practicum.filmorate.exception.controllerException.FilmAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.controllerException.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.controllerException.UserAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.controllerException.UserNotFoundException;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.filmException.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
+import ru.yandex.practicum.filmorate.exception.filmException.FilmNotValidateException;
+import ru.yandex.practicum.filmorate.exception.userException.UserAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.userException.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exception.userException.UserNotValidateException;
 import ru.yandex.practicum.filmorate.model.AppError;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException(UserNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleUserNotFound(UserNotFoundException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
+        return new AppError(e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException(UserAlreadyExistException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleUserAlreadyExist(UserAlreadyExistException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
+        return new AppError(e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException(FilmNotFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleFilmNotFound(FilmNotFoundException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
+        return new AppError(e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException(FilmAlreadyExistException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleFilmAlreadyExist(FilmAlreadyExistException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
+        return new AppError(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public AppError handleUserNotValidate(UserNotValidateException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public AppError handleFilmNotValidate(FilmNotValidateException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleFilmNotValidate(FilmNotLikedException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+
 }

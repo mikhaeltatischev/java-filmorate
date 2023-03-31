@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -17,7 +19,7 @@ public class Film {
 
     private static final int LENGTH_DESCRIPTION = 200;
 
-    private int id;
+    private Long id;
     @NotBlank
     private String name;
     @Size(max = LENGTH_DESCRIPTION)
@@ -26,6 +28,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive
     private Long duration;
+    private final Set<Long> likes = new HashSet<>();
 
     public Film updateFilm(Film film) {
         this.setName(film.getName());
@@ -34,5 +37,17 @@ public class Film {
         this.setReleaseDate(film.getReleaseDate());
 
         return film;
+    }
+
+    public void addLike(Long id) {
+        likes.add(id);
+    }
+
+    public void removeLike(Long id) {
+        likes.remove(id);
+    }
+
+    public boolean isLiked(Long id) {
+        return likes != null && likes.contains(id);
     }
 }

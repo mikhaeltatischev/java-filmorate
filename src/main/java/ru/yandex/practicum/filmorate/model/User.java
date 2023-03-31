@@ -9,13 +9,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
 @Slf4j
 public class User {
 
-    private int id;
+    private Long id;
     @Email
     @NotBlank
     private String email;
@@ -25,6 +27,7 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
+    private Set<Long> friendsId = new HashSet<>();
 
     public User updateUser(User user) {
         this.setEmail(user.getEmail());
@@ -33,5 +36,21 @@ public class User {
         this.setBirthday(user.getBirthday());
 
         return this;
+    }
+
+    public void addFriend(Long id) {
+        friendsId.add(id);
+    }
+
+    public void removeFriend(Long id) {
+        friendsId.remove(id);
+    }
+
+    public boolean isFriend(Long id) {
+        if (friendsId == null) {
+            return false;
+        } else {
+            return friendsId.contains(id);
+        }
     }
 }

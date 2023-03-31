@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exception.controllerException;
+package ru.yandex.practicum.filmorate.exception.filmException;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 

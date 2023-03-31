@@ -176,4 +176,164 @@ public class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void getUserById() throws Exception {
+        String userOne = "{\"login\": \"login\",\"name\": \"name\",\"id\": 5000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        String userTwo = "{\"login\": \"updateLogin\",\"name\": \"name\",\"id\": 6000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"2000-09-20\"}";
+
+
+        this.mockMvc.perform(post("/users")
+                        .content(userOne)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/users/5000"))
+                .andDo(print())
+                .andExpect(content().json(userOne));
+    }
+
+    @Test
+    public void addAndGetTwoMutualFriends() throws Exception {
+        String userOne = "{\"login\": \"login\",\"name\": \"name\",\"id\": 7000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        String userTwo = "{\"login\": \"updateLogin\",\"name\": \"name\",\"id\": 8000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"2000-09-20\"}";
+
+        String userThree = "{\"login\": \"login\",\"name\": \"name\",\"id\": 9000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        String userFour = "{\"login\": \"login\",\"name\": \"name\",\"id\": 10000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        this.mockMvc.perform(post("/users")
+                        .content(userOne)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userThree)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userFour)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/7000/friends/8000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/7000/friends/9000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/7000/friends/10000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/8000/friends/9000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/8000/friends/10000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/users/7000/friends/common/8000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getTwoFriends() throws Exception {
+        String userOne = "{\"login\": \"login\",\"name\": \"name\",\"id\": 11000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        String userTwo = "{\"login\": \"updateLogin\",\"name\": \"name\",\"id\": 12000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"2000-09-20\"}";
+
+        String userThree = "{\"login\": \"login\",\"name\": \"name\",\"id\": 13000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        this.mockMvc.perform(post("/users")
+                        .content(userOne)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userThree)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/11000/friends/12000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/11000/friends/13000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/users/11000/friends"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void addAndRemoveFriend() throws Exception {
+        String userOne = "{\"login\": \"login\",\"name\": \"name\",\"id\": 14000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"1976-09-20\"}";
+
+        String userTwo = "{\"login\": \"updateLogin\",\"name\": \"name\",\"id\": 15000,\"email\":" +
+                " \"mail@yandex.ru\",\"birthday\": \"2000-09-20\"}";
+
+        this.mockMvc.perform(post("/users")
+                        .content(userOne)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/users")
+                        .content(userTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(put("/users/14000/friends/15000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        this.mockMvc.perform(delete("/users/14000/friends/15000"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
