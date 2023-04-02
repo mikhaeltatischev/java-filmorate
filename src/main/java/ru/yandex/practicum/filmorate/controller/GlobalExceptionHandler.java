@@ -66,5 +66,10 @@ public class GlobalExceptionHandler {
         return new AppError(e.getMessage());
     }
 
-
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public AppError handleUnauthorized(Throwable e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
 }

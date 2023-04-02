@@ -195,11 +195,27 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void getUserById() throws Exception {
-        String filmJson = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+    public void getFilmById() throws Exception {
+        String filmOne = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
                 " \"1967-03-25\",\"duration\": 100, \"id\": 5000}";
 
-        String updateFilmJson = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+        String filmTwo = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
                 " \"2000-03-25\",\"duration\": 100, \"id\": 6000}";
+
+        mockMvc.perform(post("/films")
+                .content(filmOne)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/films")
+                        .content(filmTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/films/5000"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

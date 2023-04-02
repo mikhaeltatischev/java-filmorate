@@ -12,7 +12,5 @@ public interface FilmStorage {
 
     public List<Film> getFilms();
 
-    public Film findFilm(Film film);
-
     public Film findFilm(Long id);
 }

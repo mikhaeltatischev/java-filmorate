@@ -76,6 +76,13 @@ public class UserService {
         return mutualFriends;
     }
 
+    public User create(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
+        return userStorage.create(user);
+    }
+
     public UserStorage getUserStorage() {
         return userStorage;
     }

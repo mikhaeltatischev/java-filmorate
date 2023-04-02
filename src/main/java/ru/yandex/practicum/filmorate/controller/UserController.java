@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping(value = "/users")
     public User create(@Valid @RequestBody User user) {
-        return userService.getUserStorage().create(user);
+        return userService.create(user);
     }
 
     @PutMapping(value = "/users/{id}/friends/{friendId}")

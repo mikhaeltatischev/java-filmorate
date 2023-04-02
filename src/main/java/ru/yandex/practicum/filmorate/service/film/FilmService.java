@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyIsLikedException;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,14 +18,17 @@ import java.util.stream.Collectors;
 public class FilmService {
 
     private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
     }
 
     public Film like(Long id, Long userId) {
         Film film = filmStorage.findFilm(id);
+        userStorage.findUser(userId);
 
         if (film.isLiked(userId)) {
             log.info("User with id: {} already liked the film", userId);
@@ -38,6 +43,7 @@ public class FilmService {
 
     public Film deleteLike(Long id, Long userId) {
         Film film = filmStorage.findFilm(id);
+        userStorage.findUser(userId);
 
         if (!film.isLiked(userId)) {
             log.info("User with id: {} did not like", userId);

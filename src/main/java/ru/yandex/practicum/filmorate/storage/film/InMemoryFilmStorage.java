@@ -35,36 +35,19 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film update(Film film) {
-        if (findFilm(film) != null) {
+        if (findFilm(film.getId()) != null) {
             film.updateFilm(film);
             films.put(film.getId(), film);
             log.info("Information about the updated film: {}", film);
-
-            return film;
         }
-        throw new FilmNotFoundException("Film with id: " + film.getId() + " not found");
+        return film;
     }
 
     @Override
     public List<Film> getFilms() {
-        List<Film> listOfFilms = new ArrayList<>();
+        log.info("Current number of films: {}", films.size());
 
-        for (Film film : films.values()) {
-            listOfFilms.add(film);
-        }
-
-        log.info("Current number of films: {}", listOfFilms.size());
-
-        return listOfFilms;
-    }
-
-    @Override
-    public Film findFilm(Film film) {
-        if (films.get(film.getId()) == null) {
-            throw new FilmNotFoundException("Film with id: " + id + " not found");
-        }
-
-        return films.get(film.getId());
+        return new ArrayList<>(films.values());
     }
 
     @Override

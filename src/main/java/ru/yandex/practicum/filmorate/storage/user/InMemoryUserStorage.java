@@ -20,30 +20,20 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public List<User> getUsers() {
-        List<User> listOfUsers = new ArrayList<>();
+        log.info("Current number of users: {}", users.size());
 
-        for (User user : users.values()) {
-            listOfUsers.add(user);
-        }
-
-        log.info("Текущее количество пользователей: {}", listOfUsers.size());
-
-        return listOfUsers;
+        return new ArrayList<>(users.values());
     }
 
     @Override
     public User create(User user) {
         if (!users.containsValue(user)) {
-            if (user.getName() == null || user.getName().isBlank()) {
-                user.setName(user.getLogin());
-            }
-
             if (user.getId() == null) {
                 user.setId(id);
                 id++;
             }
             users.put(user.getId(), user);
-            log.info("Информация о добавленном пользователе: {}", user);
+            log.info("Information about the created user: {}", user);
 
             return user;
         }
@@ -52,23 +42,12 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        if (findUser(user) != null) {
+        if (findUser(user.getId()) != null) {
             user.updateUser(user);
             users.put(user.getId(), user);
-            log.info("Информация о обновленном пользователе: {}", user);
-
-            return user;
+            log.info("Information about the updated user: {}", user);
         }
-        throw new UserNotFoundException("User with id " + user.getId() + " not found");
-    }
-
-    @Override
-    public User findUser(User user) {
-        if (users.get(user.getId()) == null) {
-            throw new UserNotFoundException("User with id: " + id + " not found");
-        }
-
-        return users.get(user.getId());
+        return user;
     }
 
     @Override

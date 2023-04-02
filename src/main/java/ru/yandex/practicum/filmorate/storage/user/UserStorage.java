@@ -12,7 +12,5 @@ public interface UserStorage {
 
     public User update(User user);
 
-    public User findUser(User user);
-
     public User findUser(Long id);
 }
