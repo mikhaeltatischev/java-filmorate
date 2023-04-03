@@ -8,10 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 
-import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -46,8 +44,8 @@ public class FilmControllerTest {
                 .andExpect(status().isOk());
 
         mockMvc.perform(put("/films")
-                    .content(updateFilmJson)
-                    .contentType(MediaType.APPLICATION_JSON))
+                        .content(updateFilmJson)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -187,12 +185,37 @@ public class FilmControllerTest {
     @Test
     public void updateNotExistFilm() throws Exception {
         String filmJson = "{\"name\": \"not exist\",\"description\": \"description\", \"releaseDate\":" +
-                " \"1967-03-25\",\"duration\": 100, \"id\": 4000}";
+                " \"1967-03-25\",\"duration\": 100, \"id\": 10000}";
 
         mockMvc.perform(put("/films")
                         .content(filmJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getFilmById() throws Exception {
+        String filmOne = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+                " \"1967-03-25\",\"duration\": 100, \"id\": 5000}";
+
+        String filmTwo = "{\"name\": \"name\",\"description\": \"description\", \"releaseDate\":" +
+                " \"2000-03-25\",\"duration\": 100, \"id\": 6000}";
+
+        mockMvc.perform(post("/films")
+                .content(filmOne)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/films")
+                        .content(filmTwo)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/films/5000"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
