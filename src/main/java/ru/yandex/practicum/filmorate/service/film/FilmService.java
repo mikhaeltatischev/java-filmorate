@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyIsLikedException;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.Likes;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -28,14 +29,17 @@ public class FilmService {
     public Film like(Long id, Long userId) {
         Film film = filmStorage.findFilm(id);
         userStorage.findUser(userId);
+        Likes like = new Likes(userId, id);
 
         if (film.isLiked(userId)) {
             log.info("User with id: {} already liked the film", userId);
             throw new FilmAlreadyIsLikedException("User with id: " + userId + " already liked the film");
         } else {
             log.info("User with id {} liked film", userId);
-            film.addLike(userId);
+            film.addLike(like);
         }
+
+        filmStorage.like(id, userId);
 
         return film;
     }
@@ -48,9 +52,11 @@ public class FilmService {
             log.info("User with id: {} did not like", userId);
             throw new FilmNotLikedException("User with id: " + userId + " did not like");
         } else {
-            log.info("User with id {} delete like", userId);
+            log.info("User with id: {} delete like", userId);
             film.removeLike(userId);
         }
+
+        filmStorage.deleteLike(id, userId);
 
         return film;
     }

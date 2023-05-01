@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.userException.FriendAlreadyExistException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.ArrayList;
@@ -25,30 +25,32 @@ public class UserService {
         User user = userStorage.findUser(id);
         User friend = userStorage.findUser(friendId);
 
-        if (user.isFriend(friend.getId())) {
+        if (user.isFriend(friendId)) {
             log.info("The user {} has already been added as a friend", friend);
             throw new FriendAlreadyExistException("You are already friends");
         } else {
             log.info("User {} add to friends", friend);
-            user.addFriend(friend.getId());
-            friend.addFriend(user.getId());
+            user.addFriend(friendId);
+            friend.addFriend(id);
+            userStorage.addFriend(id, friendId);
+
+            return user;
         }
-        return user;
     }
 
-    public User removeFriend(Long id, Long friendId) {
+    public User deleteFriend(Long id, Long friendId) {
         User user = userStorage.findUser(id);
-        User friend = userStorage.findUser(friendId);
 
-        if (!user.isFriend(friend.getId())) {
-            log.info("The user {} already deleted", friend);
+        if (!user.isFriend(friendId)) {
+            log.info("The user with id: {} already deleted", friendId);
             throw new FriendAlreadyExistException("User is not friends");
         } else {
-            log.info("User {} removed from friends", friend);
-            user.removeFriend(friend.getId());
-            friend.removeFriend(user.getId());
+            log.info("The user with id: {} removed from friends", friendId);
+            user.removeFriend(friendId);
+            userStorage.deleteFriend(id, friendId);
+
+            return user;
         }
-        return user;
     }
 
     public List<User> getFriends(Long id) {
@@ -81,6 +83,10 @@ public class UserService {
             user.setName(user.getLogin());
         }
         return userStorage.create(user);
+    }
+
+    public User update(User user) {
+        return userStorage.update(user);
     }
 
     public UserStorage getUserStorage() {

@@ -6,10 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.filmException.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
-import ru.yandex.practicum.filmorate.exception.filmException.FilmNotValidateException;
+import ru.yandex.practicum.filmorate.exception.filmException.*;
 import ru.yandex.practicum.filmorate.exception.userException.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.userException.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.userException.UserNotValidateException;
@@ -77,6 +74,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public AppError handleFilmNotValidate(final MethodArgumentNotValidException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleMpaNotFound(final MpaNotFoundException e) {
+        log.error(e.getMessage(), e);
+        return new AppError(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public AppError handleGenreNotFound(final GenreNotFoundException e) {
         log.error(e.getMessage(), e);
         return new AppError(e.getMessage());
     }
