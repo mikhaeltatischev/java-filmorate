@@ -11,7 +11,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -40,7 +43,7 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.mpa= mpa;
+        this.mpa = mpa;
     }
 
     public void addLike(Likes like) {
