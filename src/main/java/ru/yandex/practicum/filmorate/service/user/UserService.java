@@ -90,6 +90,7 @@ public class UserService {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+
         return userStorage.create(user);
     }
 

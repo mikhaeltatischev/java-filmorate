@@ -90,6 +90,7 @@ public class FilmService {
 
         return result;
     }
+
     public Film update(Film film) {
         findFilm(film.getId());
         genreStorage.clearGenresForFilm(film.getId());
