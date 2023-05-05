@@ -7,10 +7,13 @@ import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyIsLikedE
 import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.Likes;
+import ru.yandex.practicum.filmorate.model.genre.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -19,62 +22,86 @@ public class FilmService {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final GenreStorage genreStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, GenreStorage genreStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.genreStorage = genreStorage;
     }
 
-    public Film like(Long id, Long userId) {
+    public Film findFilm(Long id) {
+        Set<Genre> genres = genreStorage.getGenresForFilm(id);
+        Set<Likes> likes = filmStorage.getLikes(id);
+        Film film = filmStorage.findFilm(id);
+
+        film.setGenres(genres);
+        film.setLikes(likes);
+        log.info("Create film: " + film);
+
+        return film;
+    }
+
+    public List<Film> getFilms() {
+        List<Film> films = filmStorage.getFilms();
+
+        for (Film film : films) {
+            Set<Genre> genres = genreStorage.getGenresForFilm(film.getId());
+            Set<Likes> likes = filmStorage.getLikes(film.getId());
+            film.setGenres(genres);
+            film.setLikes(likes);
+        }
+
+        return films;
+    }
+
+    public void like(Long id, Long userId) {
         Film film = filmStorage.findFilm(id);
         userStorage.findUser(userId);
-        Likes like = new Likes(userId, id);
 
         if (film.isLiked(userId)) {
-            log.info("User with id: {} already liked the film", userId);
             throw new FilmAlreadyIsLikedException("User with id: " + userId + " already liked the film");
         } else {
-            log.info("User with id {} liked film", userId);
-            film.addLike(like);
+            filmStorage.like(id, userId);
         }
-
-        filmStorage.like(id, userId);
-
-        return film;
     }
 
-    public Film deleteLike(Long id, Long userId) {
-        Film film = filmStorage.findFilm(id);
+    public void deleteLike(Long id, Long userId) {
+        Film film = findFilm(id);
         userStorage.findUser(userId);
 
-        if (!film.isLiked(userId)) {
-            log.info("User with id: {} did not like", userId);
-            throw new FilmNotLikedException("User with id: " + userId + " did not like");
+        if (film.isLiked(userId)) {
+            filmStorage.deleteLike(id, userId);
         } else {
-            log.info("User with id: {} delete like", userId);
-            film.removeLike(userId);
+            throw new FilmNotLikedException("User with id: " + userId + " did not like");
         }
-
-        filmStorage.deleteLike(id, userId);
-
-        return film;
     }
 
     public List<Film> getPopularFilms(int count) {
-        return filmStorage.getFilms().stream()
-                .sorted((f0, f1) -> compare(f0, f1))
+        return getFilms().stream()
+                .sorted(this::compare)
                 .limit(count)
                 .collect(Collectors.toList());
     }
 
     private int compare(Film f0, Film f1) {
-        int result = f1.getLikes().size() - (f0.getLikes().size());
+        int result = f1.getLikes().size() - f0.getLikes().size();
 
         return result;
     }
+    public Film update(Film film) {
+        findFilm(film.getId());
+        genreStorage.clearGenresForFilm(film.getId());
+        genreStorage.setGenresForFilm(film);
+        filmStorage.update(film);
 
-    public FilmStorage getFilmStorage() {
-        return filmStorage;
+        return film;
+    }
+
+    public Film create(Film film) {
+        filmStorage.create(film);
+        genreStorage.setGenresForFilm(film);
+        return film;
     }
 }

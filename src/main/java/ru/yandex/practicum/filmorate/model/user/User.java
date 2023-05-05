@@ -17,14 +17,14 @@ import java.util.*;
 public class User {
 
     private Long id;
-    @Email
+    @Email(message = "Incorrect email")
     @NotBlank
     private String email;
-    @NotBlank
+    @NotBlank(message = "Incorrect login")
     @Pattern(regexp = "^\\S*$")
     private String login;
     private String name;
-    @Past
+    @Past(message = "Birthday must be in past")
     private LocalDate birthday;
     private Set<Long> friendsId = new HashSet<>();
 

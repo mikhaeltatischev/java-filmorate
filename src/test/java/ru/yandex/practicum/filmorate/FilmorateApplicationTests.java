@@ -49,7 +49,8 @@ class FilmorateApplicationTests {
 	@Test
 	public void testFindFilmById() {
 		Film filmOne = new Film(1L, "name", "description", LocalDate.of(2000, 01,
-					01), 1000, new Mpa(1));
+				01), 1000, new Mpa(1));
+
 		filmStorage.create(filmOne);
 
 		Optional<Film> optionalFilm = Optional.of(filmStorage.findFilm(1L));
@@ -64,7 +65,7 @@ class FilmorateApplicationTests {
 	@Test
 	public void testFindUserById() {
 		User userOne = new User(1L, "mail@mail.ru", "login", "name", LocalDate.of(2000, 01,
-						01));
+				01));
 
 		userStorage.create(userOne);
 
@@ -89,5 +90,12 @@ class FilmorateApplicationTests {
 		List<Film> films = filmStorage.getFilms();
 
 		assertEquals(0, films.size());
+	}
+
+	@Test
+	public void testCreateUserWithoutLogin() {
+		User user = new User(1L, "mail", "j j", "name", LocalDate.of(3000, 01, 01));
+
+		userStorage.create(user);
 	}
 }

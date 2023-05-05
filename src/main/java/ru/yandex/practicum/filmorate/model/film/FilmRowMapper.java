@@ -17,6 +17,8 @@ public class FilmRowMapper implements RowMapper<Film> {
         Integer duration = rs.getInt("duration");
         Mpa mpa = new Mpa(rs.getInt("mpa"), rs.getString("name"));
 
-        return new Film(filmId, filmName, description, releaseDate, duration, mpa);
+        Film film = new Film(filmId, filmName, description, releaseDate, duration, mpa);
+
+        return film;
     }
 }

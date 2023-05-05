@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.genre.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class GenreService {
         return genreStorage.findGenre(id);
     }
 
-    public List<Genre> getGenres() {
-        return genreStorage.getGenres();
+    public Stream<Genre> getGenres() {
+        return genreStorage.getGenres().stream().sorted(Genre::compareTo);
     }
 }

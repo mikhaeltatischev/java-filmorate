@@ -22,27 +22,29 @@ public class FilmController {
 
     @GetMapping("/films")
     public List<Film> getFilms() {
-        return filmService.getFilmStorage().getFilms();
+        return filmService.getFilms();
     }
 
     @PutMapping(value = "/films")
     public Film update(@Valid @RequestBody Film film) {
-        return filmService.getFilmStorage().update(film);
+        return filmService.update(film);
     }
 
     @PostMapping(value = "/films")
     public Film create(@Valid @RequestBody Film film) {
-        return filmService.getFilmStorage().create(film);
+        return filmService.create(film);
     }
 
     @PutMapping(value = "/films/{id}/like/{userId}")
-    public Film like(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
-        return filmService.like(id, userId);
+    public void like(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        filmService.like(id, userId);
+        log.info("User with id {} like film with id {}", userId, id);
     }
 
     @DeleteMapping(value = "/films/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
-        return filmService.deleteLike(id, userId);
+    public void deleteLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        filmService.deleteLike(id, userId);
+        log.info("User with id {} delete like film with id {}", userId, id);
     }
 
     @GetMapping(value = "/films/popular")
@@ -52,6 +54,6 @@ public class FilmController {
 
     @GetMapping(value = "/films/{id}")
     public Film getFilmById(@PathVariable(value = "id") Long id) {
-        return filmService.getFilmStorage().findFilm(id);
+        return filmService.findFilm(id);
     }
 }

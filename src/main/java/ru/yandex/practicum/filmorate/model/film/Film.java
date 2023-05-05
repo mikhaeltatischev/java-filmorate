@@ -11,10 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -33,8 +30,8 @@ public class Film {
     @Positive
     private Integer duration;
     private Mpa mpa;
-    private List<Genre> genres = new ArrayList<>();
-    private List<Likes> likes = new ArrayList<>();
+    private Set<Genre> genres = new HashSet<>();
+    private Set<Likes> likes = new HashSet<>();
     private Integer rate;
 
     public Film(Long id, String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
@@ -44,22 +41,6 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
-    }
-
-    public void addLike(Likes like) {
-        likes.add(like);
-    }
-
-    public void removeLike(Long id) {
-        if (likes.size() == 0) {
-            return;
-        }
-
-        for (int i = 0; i < likes.size(); i++) {
-            if (likes.get(i).getUserId() == id) {
-                likes.remove(i);
-            }
-        }
     }
 
     public boolean isLiked(Long id) {

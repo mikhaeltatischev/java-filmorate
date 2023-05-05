@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return userService.getUserStorage().getUsers();
+        return userService.getUsers();
     }
 
     @PutMapping(value = "/users")
@@ -57,6 +57,6 @@ public class UserController {
 
     @GetMapping(value = "/users/{id}")
     public User getUserById(@PathVariable("id") Long id) {
-        return userService.getUserStorage().findUser(id);
+        return userService.findUser(id);
     }
 }

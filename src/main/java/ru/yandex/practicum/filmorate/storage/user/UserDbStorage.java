@@ -35,6 +35,7 @@ public class UserDbStorage implements UserStorage {
         }
 
         log.info("Received users: " + users);
+
         return users;
     }
 
@@ -46,14 +47,14 @@ public class UserDbStorage implements UserStorage {
 
         Long userId = simpleJdbcInsert.executeAndReturnKey(user.toMap()).longValue();
         user.setId(userId);
+
         log.info("Create user: " + user);
+
         return user;
     }
 
     @Override
     public User update(User user) {
-        this.findUser(user.getId());
-
         String sql = "update users set " +
                 "email = ?, login = ?, username = ?, birthday = ?" +
                 "where user_id = ?";
@@ -61,18 +62,21 @@ public class UserDbStorage implements UserStorage {
         jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
 
         log.info("Update user: " + user);
+
         return user;
     }
 
     @Override
     public User findUser(Long id) {
-        String sql = "select * from users where user_id = ?";
+        String sql = "select u.* from users as u left join friends as f on u.user_id = f.user_id where u.user_id = ?";
 
         User user = jdbcTemplate.query(sql, new UserRowMapper(), id).stream().findAny()
                 .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
 
         this.getFriends(user);
+
         log.info("User with id: " + id + " " + user);
+
         return user;
     }
 
