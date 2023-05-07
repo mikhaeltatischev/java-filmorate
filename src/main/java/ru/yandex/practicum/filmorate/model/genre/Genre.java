@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,13 @@ public class Genre implements Comparable<Genre> {
         value.put("name", getName());
 
         return value;
+    }
+
+    public static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+
+        return new Genre(id, name);
     }
 
     @Override

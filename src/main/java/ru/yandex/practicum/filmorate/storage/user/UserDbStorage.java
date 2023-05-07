@@ -55,9 +55,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User update(User user) {
-        String sql = "update users set " +
-                "email = ?, login = ?, username = ?, birthday = ?" +
-                "where user_id = ?";
+        String sql = "update users set email = ?, login = ?, username = ?, birthday = ? where user_id = ?";
 
         jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
 
@@ -82,8 +80,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addFriend(Long id, Long friendId) {
-        String sql = "insert into friends (user_id, friend_id)" +
-                "values (?, ?)";
+        String sql = "insert into friends (user_id, friend_id) values (?, ?)";
 
         jdbcTemplate.update(sql, id, friendId);
     }

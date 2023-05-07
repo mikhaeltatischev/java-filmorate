@@ -11,7 +11,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -54,6 +57,16 @@ public class Film {
             }
         }
         return false;
+    }
+
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+    }
+
+    public void addLike(Likes like) {
+        if (like.getUserId() != 0) {
+            likes.add(like);
+        }
     }
 
     public Map<String, Object> toMap() {

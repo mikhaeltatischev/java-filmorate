@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmAlreadyIsLikedException;
 import ru.yandex.practicum.filmorate.exception.filmException.FilmNotLikedException;
@@ -12,9 +13,12 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.function.UnaryOperator.identity;
 
 @Slf4j
 @Service
@@ -23,21 +27,21 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
     private final GenreStorage genreStorage;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage, GenreStorage genreStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage, GenreStorage genreStorage, JdbcTemplate jdbcTemplate) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.genreStorage = genreStorage;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Film findFilm(Long id) {
-        Set<Genre> genres = genreStorage.getGenresForFilm(id);
-        Set<Likes> likes = filmStorage.getLikes(id);
         Film film = filmStorage.findFilm(id);
 
-        film.setGenres(genres);
-        film.setLikes(likes);
+        load(film);
+
         log.info("Create film: " + film);
 
         return film;
@@ -46,14 +50,24 @@ public class FilmService {
     public List<Film> getFilms() {
         List<Film> films = filmStorage.getFilms();
 
-        for (Film film : films) {
-            Set<Genre> genres = genreStorage.getGenresForFilm(film.getId());
-            Set<Likes> likes = filmStorage.getLikes(film.getId());
-            film.setGenres(genres);
-            film.setLikes(likes);
-        }
+        loadButch(films);
 
         return films;
+    }
+
+    public Film update(Film film) {
+        findFilm(film.getId());
+        genreStorage.clearGenresForFilm(film.getId());
+        genreStorage.setGenresForFilm(film);
+        filmStorage.update(film);
+
+        return film;
+    }
+
+    public Film create(Film film) {
+        filmStorage.create(film);
+        genreStorage.setGenresForFilm(film);
+        return film;
     }
 
     public void like(Long id, Long userId) {
@@ -91,18 +105,26 @@ public class FilmService {
         return result;
     }
 
-    public Film update(Film film) {
-        findFilm(film.getId());
-        genreStorage.clearGenresForFilm(film.getId());
-        genreStorage.setGenresForFilm(film);
-        filmStorage.update(film);
+    private void loadButch(List<Film> films) {
+        String inSql = String.join(",", Collections.nCopies(films.size(), "?"));
+        final Map<Long, Film> filmById = films.stream().collect(Collectors.toMap(Film::getId, identity()));
+        final String sqlQuery = "select * from GENRE g, FILM_GENRES fg left join LIKES l on fg.FILM_ID = l.FILM_ID " +
+                "where fg.ID = g.ID and fg.FILM_ID in (" + inSql + ")";
 
-        return film;
+        jdbcTemplate.query(sqlQuery, (rs) -> {
+            final Film film = filmById.get(rs.getLong("FILM_ID"));
+            film.addGenre(Genre.makeGenre(rs, 0));
+            film.addLike(Likes.makeLike(rs, 0));
+        }, films.stream().map(Film::getId).toArray());
     }
 
-    public Film create(Film film) {
-        filmStorage.create(film);
-        genreStorage.setGenresForFilm(film);
-        return film;
+    private void load(Film film) {
+        String sql = "select * from GENRE g, FILM_GENRES fg left join LIKES l on fg.FILM_ID = l.FILM_ID " +
+                "where fg.ID = g.ID and fg.FILM_ID = ?";
+
+        jdbcTemplate.query(sql, rs -> {
+            film.addGenre(Genre.makeGenre(rs, 0));
+            film.addLike(Likes.makeLike(rs, 0));
+        }, film.getId());
     }
 }
