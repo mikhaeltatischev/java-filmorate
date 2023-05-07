@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import javax.validation.Valid;
@@ -22,12 +22,12 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> getUsers() {
-        return userService.getUserStorage().getUsers();
+        return userService.getUsers();
     }
 
     @PutMapping(value = "/users")
     public User update(@Valid @RequestBody User user) {
-        return userService.getUserStorage().update(user);
+        return userService.update(user);
     }
 
     @PostMapping(value = "/users")
@@ -41,8 +41,8 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/users/{id}/friends/{friendId}")
-    public User removeFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
-        return userService.removeFriend(id, friendId);
+    public User deleteFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
+        return userService.deleteFriend(id, friendId);
     }
 
     @GetMapping(value = "/users/{id}/friends")
@@ -57,6 +57,6 @@ public class UserController {
 
     @GetMapping(value = "/users/{id}")
     public User getUserById(@PathVariable("id") Long id) {
-        return userService.getUserStorage().findUser(id);
+        return userService.findUser(id);
     }
 }

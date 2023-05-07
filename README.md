@@ -35,4 +35,12 @@ film_name **AS** name
 ### request of get users  
 - **SELECT** user_id **AS** id,  
 username **AS** name  
-**FROM** users  
+**FROM** users;
+
+### request of get genres
+- **SELECT** name  
+**FROM** genre;
+
+### request of get mpa
+- **SELECT** name  
+**FROM** mpa;

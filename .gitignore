@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+
 ### STS ###
 .apt_generated
 .classpath
@@ -36,3 +37,6 @@ build/
 .mvn
 mvnw.cmd
 mvnw
+
+### Database ###
+db
