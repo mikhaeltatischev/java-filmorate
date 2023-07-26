@@ -5,7 +5,7 @@
 Spring, H2, Lombok, JDBC  
 
 ### Diagram of filmorate database.
-![Screenshot of the diagram of database.](/src/main/resources/images/diagram.png/)
+![Screenshot of the diagram of database.](/src/main/resources/images/diagram.png/)  
 request examples:
 
 ### request of get films  
