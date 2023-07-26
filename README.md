@@ -1,4 +1,9 @@
-# java-filmorate
+# Фильморейт
+Проект создан, чтобы помочь с выбором фильма. Рекомендации основываются на основе просмотров друзей и их оценок.  
+
+# Используемые технологии
+Spring, H2, Lombok, JDBC  
+
 ### Diagram of filmorate database.
 ![Screenshot of the diagram of database.](/src/main/resources/images/diagram.png/)
 request examples:
