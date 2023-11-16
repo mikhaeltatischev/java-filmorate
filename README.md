@@ -14,3 +14,8 @@ Spring, H2, Lombok, JDBC
 
 ### Схема базы данных приложения.
 ![Screenshot of the diagram of database.](/src/main/resources/images/diagram.png/)  
+
+## Инструкция по развертыванию:
+ - Скачать данный репозиторий
+ - Выполнить команду ```mvn clean install```
+ - Запустить Jar-файл ```java -jar filename.jar```, где ```filename``` - название исполняемого файла
